@@ -1,0 +1,1172 @@
+/* ==========================================================================
+   THE LOST PC - WINDOWS 98 RETRO STYLESHEET
+   Gandhi Hackathon 2026 | OpenLake x Meraz (IIT Bhilai)
+   ========================================================================== */
+
+/* --- Reset & Base Variables --- */
+:root {
+  --win-bg: #008080;             /* Classic Windows 98 Teal */
+  --win-gray: #c0c0c0;           /* System Gray */
+  --win-gray-light: #dfdfdf;
+  --win-white: #ffffff;
+  --win-dark: #808080;
+  --win-black: #000000;
+  --win-blue-start: #000080;     /* Active title bar gradient */
+  --win-blue-end: #1084d0;
+  --win-inactive-start: #808080;
+  --win-inactive-end: #b5b5b5;
+  --win-selection: #000080;
+  --win-font: 'Tahoma', 'Segoe UI', 'MS Sans Serif', -apple-system, BlinkMacSystemFont, sans-serif;
+  --taskbar-height: 38px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--win-font);
+  font-size: 12px;
+  background-color: var(--win-bg);
+  color: var(--win-black);
+}
+
+/* --- Bevel Borders (Windows 98 3D Look) --- */
+.win-outset {
+  background-color: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-black);
+  border-bottom: 2px solid var(--win-black);
+  box-shadow: inset 1px 1px 0 var(--win-gray-light), inset -1px -1px 0 var(--win-dark);
+}
+
+.win-inset {
+  background-color: var(--win-white);
+  border-top: 2px solid var(--win-dark);
+  border-left: 2px solid var(--win-dark);
+  border-right: 2px solid var(--win-white);
+  border-bottom: 2px solid var(--win-white);
+  box-shadow: inset 1px 1px 0 var(--win-black), inset -1px -1px 0 var(--win-gray-light);
+}
+
+.win-btn {
+  background-color: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-black);
+  border-bottom: 2px solid var(--win-black);
+  box-shadow: inset 1px 1px 0 var(--win-gray-light), inset -1px -1px 0 var(--win-dark);
+  padding: 2px 8px;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  outline: none;
+}
+
+.win-btn:active, .win-btn.active {
+  border-top: 2px solid var(--win-black);
+  border-left: 2px solid var(--win-black);
+  border-right: 2px solid var(--win-white);
+  border-bottom: 2px solid var(--win-white);
+  box-shadow: inset 1px 1px 0 var(--win-dark);
+  padding: 3px 7px 1px 9px;
+}
+
+/* --- CRT Scanline Overlay (Optional retro filter) --- */
+#crt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999999;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+  background-size: 100% 3px;
+  opacity: 0.45;
+  display: none; /* Can be enabled via Control Panel / Settings */
+}
+
+body.crt-active #crt-overlay {
+  display: block;
+}
+
+/* --- Desktop Workspace --- */
+#desktop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: var(--taskbar-height);
+  overflow: hidden;
+  padding: 10px;
+}
+
+/* Desktop Icons Grid */
+.desktop-icons {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 16px;
+  height: 100%;
+  width: max-content;
+}
+
+.desktop-icon {
+  width: 76px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 4px;
+  cursor: pointer;
+  border: 1px dotted transparent;
+  transition: transform 0.05s ease;
+}
+
+.desktop-icon img, .desktop-icon svg {
+  width: 36px;
+  height: 36px;
+  margin-bottom: 4px;
+  filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.5));
+}
+
+.desktop-icon span {
+  color: var(--win-white);
+  font-size: 11px;
+  padding: 2px 4px;
+  line-height: 1.2;
+  word-break: break-word;
+  text-shadow: 1px 1px 2px #000;
+  border: 1px dotted transparent;
+}
+
+.desktop-icon:hover {
+  background-color: rgba(0, 0, 128, 0.2);
+}
+
+.desktop-icon.selected {
+  border: 1px dotted #ffff88;
+}
+
+.desktop-icon.selected span {
+  background-color: var(--win-selection);
+  border: 1px dotted #ffff88;
+  text-shadow: none;
+}
+
+/* Hazard / Easter Egg Icon Shake */
+.desktop-icon.hazard:hover img {
+  animation: mini-shake 0.3s infinite;
+}
+
+@keyframes mini-shake {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  75% { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* --- Windows System --- */
+.window {
+  position: absolute;
+  min-width: 280px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+  background-color: var(--win-gray);
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.4);
+}
+
+.window.minimized {
+  display: none !important;
+}
+
+.window.maximized {
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Window Titlebar */
+.window-titlebar {
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px;
+  margin: 2px 2px 0 2px;
+  background: linear-gradient(90deg, var(--win-blue-start) 0%, var(--win-blue-end) 100%);
+  color: var(--win-white);
+  font-weight: bold;
+  font-size: 11px;
+  cursor: move;
+}
+
+.window:not(.active) .window-titlebar {
+  background: linear-gradient(90deg, var(--win-inactive-start) 0%, var(--win-inactive-end) 100%);
+  color: #d4d0c8;
+}
+
+.window-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.window-title img {
+  width: 16px;
+  height: 16px;
+}
+
+.window-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.win-control-btn {
+  width: 16px;
+  height: 14px;
+  background-color: var(--win-gray);
+  border-top: 1px solid var(--win-white);
+  border-left: 1px solid var(--win-white);
+  border-right: 1px solid var(--win-black);
+  border-bottom: 1px solid var(--win-black);
+  font-size: 10px;
+  font-weight: bold;
+  font-family: 'Marlett', monospace, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  color: #000;
+}
+
+.win-control-btn:active {
+  border-top: 1px solid var(--win-black);
+  border-left: 1px solid var(--win-black);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+}
+
+.win-control-btn.close {
+  margin-left: 2px;
+}
+
+/* Window Menubar */
+.window-menubar {
+  display: flex;
+  background-color: var(--win-gray);
+  padding: 2px 6px;
+  font-size: 11px;
+  border-bottom: 1px solid var(--win-dark);
+  gap: 8px;
+}
+
+.menu-item {
+  padding: 2px 5px;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background-color: var(--win-selection);
+  color: var(--win-white);
+}
+
+/* Window Toolbar / Address bar */
+.window-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 6px;
+  background-color: var(--win-gray);
+  border-bottom: 1px solid var(--win-dark);
+  font-size: 11px;
+}
+
+.address-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.address-bar input {
+  flex: 1;
+  padding: 2px 4px;
+  font-size: 11px;
+  font-family: inherit;
+  outline: none;
+}
+
+/* Window Content Area */
+.window-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  margin: 2px;
+  background-color: var(--win-white);
+}
+
+/* Window Status Bar */
+.window-statusbar {
+  height: 20px;
+  background-color: var(--win-gray);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 6px;
+  font-size: 11px;
+  border-top: 1px solid var(--win-dark);
+}
+
+.status-pane {
+  padding: 0 4px;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+  height: 16px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* --- File Explorer (My Computer & My Documents) --- */
+.explorer-view {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 12px;
+  padding: 14px;
+  align-content: flex-start;
+  overflow-y: auto;
+  background-color: #ffffff;
+}
+
+.file-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 6px 4px;
+  cursor: pointer;
+  border: 1px dotted transparent;
+}
+
+.file-item img {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 4px;
+}
+
+.file-item span {
+  font-size: 11px;
+  color: var(--win-black);
+  word-break: break-word;
+  line-height: 1.2;
+}
+
+.file-item:hover {
+  background-color: #e0f0ff;
+}
+
+.file-item.selected {
+  background-color: var(--win-selection);
+}
+
+.file-item.selected span {
+  color: var(--win-white);
+}
+
+/* --- Notepad App --- */
+.notepad-editor {
+  flex: 1;
+  width: 100%;
+  resize: none;
+  outline: none;
+  border: none;
+  padding: 6px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  color: #000;
+  background-color: #fff;
+}
+
+/* --- Internet Explorer --- */
+.ie-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background-color: #ffffff;
+}
+
+.ie-page {
+  padding: 16px;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+/* Fake Google 1998 */
+.google-page {
+  text-align: center;
+  padding: 24px 10px;
+}
+
+.google-logo {
+  font-size: 48px;
+  font-family: 'Times New Roman', serif;
+  font-weight: bold;
+  letter-spacing: -2px;
+  margin-bottom: 8px;
+}
+
+.google-logo span:nth-child(1) { color: #1a0dab; }
+.google-logo span:nth-child(2) { color: #d93025; }
+.google-logo span:nth-child(3) { color: #f9ab00; }
+.google-logo span:nth-child(4) { color: #1a0dab; }
+.google-logo span:nth-child(5) { color: #188038; }
+.google-logo span:nth-child(6) { color: #d93025; }
+
+.google-search-box {
+  margin: 16px auto;
+  max-width: 440px;
+}
+
+.google-search-box input[type="text"] {
+  width: 100%;
+  padding: 4px 6px;
+  font-size: 14px;
+  font-family: inherit;
+  margin-bottom: 8px;
+}
+
+.search-results {
+  text-align: left;
+  max-width: 580px;
+  margin: 20px auto;
+}
+
+.search-result-item {
+  margin-bottom: 14px;
+}
+
+.search-result-item a {
+  color: #0000cc;
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.search-result-item p {
+  font-size: 12px;
+  color: #333333;
+  margin-top: 2px;
+}
+
+/* Retro Geocities Page */
+.geocities-page {
+  background-color: #000033;
+  color: #00ff00;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  padding: 20px;
+  text-align: center;
+}
+
+.marquee-banner {
+  background-color: #ff0000;
+  color: #ffff00;
+  font-weight: bold;
+  padding: 4px;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.counter-box {
+  display: inline-block;
+  background: #000;
+  border: 2px inset #fff;
+  padding: 4px 10px;
+  color: #00ff00;
+  font-family: monospace;
+  font-size: 16px;
+  letter-spacing: 4px;
+  margin: 10px 0;
+}
+
+/* --- Image Viewer App --- */
+.image-viewer-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #808080;
+  padding: 10px;
+  overflow: auto;
+}
+
+.image-viewer-content img {
+  max-width: 90%;
+  max-height: 80%;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+  border: 1px solid #404040;
+}
+
+/* --- Minesweeper App --- */
+.minesweeper-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--win-gray);
+  padding: 8px;
+}
+
+.minesweeper-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 4px 8px;
+  margin-bottom: 8px;
+  border-top: 2px solid var(--win-dark);
+  border-left: 2px solid var(--win-dark);
+  border-right: 2px solid var(--win-white);
+  border-bottom: 2px solid var(--win-white);
+}
+
+.lcd-display {
+  background: #000;
+  color: #ff0000;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 2px 6px;
+  border: 1px inset #808080;
+  letter-spacing: 2px;
+}
+
+.minesweeper-face {
+  width: 26px;
+  height: 26px;
+  font-size: 16px;
+  padding: 0;
+}
+
+.minesweeper-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 22px);
+  grid-template-rows: repeat(9, 22px);
+  gap: 1px;
+  background-color: #808080;
+  border-top: 3px solid var(--win-dark);
+  border-left: 3px solid var(--win-dark);
+  border-right: 3px solid var(--win-white);
+  border-bottom: 3px solid var(--win-white);
+  padding: 2px;
+}
+
+.cell {
+  width: 22px;
+  height: 22px;
+  background-color: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  border-left: 2px solid var(--win-white);
+  border-right: 2px solid var(--win-dark);
+  border-bottom: 2px solid var(--win-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.cell.revealed {
+  border: 1px solid #7b7b7b;
+  background-color: #d4d0c8;
+  cursor: default;
+}
+
+.cell.mine-hit {
+  background-color: #ff2200;
+}
+
+/* Number colors for Minesweeper */
+.c-1 { color: #0000ff; }
+.c-2 { color: #008000; }
+.c-3 { color: #ff0000; }
+.c-4 { color: #000080; }
+.c-5 { color: #800000; }
+.c-6 { color: #008080; }
+.c-7 { color: #000000; }
+.c-8 { color: #808080; }
+
+/* --- MS-DOS Prompt Window --- */
+.dos-content {
+  flex: 1;
+  background-color: #000000;
+  color: #00ff00;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  padding: 8px;
+  overflow-y: auto;
+  line-height: 1.3;
+}
+
+.dos-input-line {
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.dos-input-line input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #00ff00;
+  font-family: inherit;
+  font-size: inherit;
+  padding-left: 4px;
+}
+
+/* --- Calculator App --- */
+.calc-wrap {
+  padding: 10px;
+  background-color: var(--win-gray);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.calc-display {
+  width: 100%;
+  height: 32px;
+  background: #ffffff;
+  border: 2px inset var(--win-dark);
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
+  padding: 4px 8px;
+  outline: none;
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+
+.calc-grid button {
+  height: 32px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+/* --- Bottom Taskbar --- */
+#taskbar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--taskbar-height);
+  background-color: var(--win-gray);
+  border-top: 2px solid var(--win-white);
+  box-shadow: inset 0 1px 0 var(--win-gray-light);
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
+  gap: 6px;
+  z-index: 99990;
+}
+
+/* Start Button */
+#start-button {
+  height: 28px;
+  padding: 2px 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+  font-size: 12px;
+}
+
+#start-button img {
+  width: 18px;
+  height: 18px;
+}
+
+/* Open Tasks in Taskbar */
+.taskbar-tasks {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  overflow-x: auto;
+  height: 100%;
+}
+
+.taskbar-item {
+  height: 26px;
+  max-width: 160px;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.taskbar-item img {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.taskbar-item.active {
+  background-color: var(--win-gray-light);
+  border-top: 2px solid var(--win-black);
+  border-left: 2px solid var(--win-black);
+  border-right: 2px solid var(--win-white);
+  border-bottom: 2px solid var(--win-white);
+  box-shadow: inset 1px 1px 0 var(--win-dark);
+  font-weight: bold;
+}
+
+/* System Tray (Notification Area) */
+.system-tray {
+  height: 26px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-top: 1px solid var(--win-dark);
+  border-left: 1px solid var(--win-dark);
+  border-right: 1px solid var(--win-white);
+  border-bottom: 1px solid var(--win-white);
+}
+
+.tray-icon {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+#digital-clock {
+  font-size: 11px;
+  color: var(--win-black);
+  white-space: nowrap;
+  margin-left: 4px;
+}
+
+/* --- Start Menu --- */
+#start-menu {
+  position: absolute;
+  bottom: var(--taskbar-height);
+  left: 2px;
+  width: 220px;
+  background-color: var(--win-gray);
+  display: none;
+  flex-direction: row;
+  z-index: 99995;
+  box-shadow: 3px 3px 10px rgba(0,0,0,0.5);
+}
+
+#start-menu.open {
+  display: flex;
+}
+
+.start-sidebar {
+  width: 28px;
+  background: linear-gradient(180deg, #000080 0%, #1084d0 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+}
+
+.start-sidebar-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: var(--win-white);
+  font-weight: bold;
+  font-size: 15px;
+  letter-spacing: 2px;
+}
+
+.start-sidebar-text span {
+  font-weight: normal;
+  color: #ffff88;
+}
+
+.start-items {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2px 0;
+}
+
+.start-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 11px;
+  position: relative;
+}
+
+.start-menu-item img {
+  width: 20px;
+  height: 20px;
+}
+
+.start-menu-item:hover {
+  background-color: var(--win-selection);
+  color: var(--win-white);
+}
+
+.start-menu-divider {
+  height: 1px;
+  background-color: var(--win-dark);
+  border-bottom: 1px solid var(--win-white);
+  margin: 3px 4px;
+}
+
+/* Submenu Flyouts */
+.has-submenu::after {
+  content: '▶';
+  position: absolute;
+  right: 8px;
+  font-size: 8px;
+}
+
+.submenu {
+  position: absolute;
+  left: 100%;
+  top: -2px;
+  width: 180px;
+  background-color: var(--win-gray);
+  display: none;
+  flex-direction: column;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+}
+
+.start-menu-item:hover > .submenu {
+  display: flex;
+}
+
+/* --- Retro Dialog Popups & Error Cascades --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.25);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999998;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.dialog-box {
+  width: 360px;
+  background-color: var(--win-gray);
+}
+
+.dialog-body {
+  padding: 14px 16px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.dialog-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.dialog-message {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 14px 12px 14px;
+}
+
+/* --- Simulated Blue Screen of Death (BSOD) --- */
+#bsod {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0000aa;
+  color: #ffffff;
+  font-family: 'Lucida Console', Monaco, 'Courier New', monospace;
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 40px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000000;
+  text-align: center;
+  cursor: pointer;
+}
+
+#bsod.active {
+  display: flex;
+}
+
+.bsod-header {
+  background-color: #aaaaaa;
+  color: #0000aa;
+  font-weight: bold;
+  padding: 2px 12px;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.bsod-text {
+  max-width: 680px;
+  text-align: left;
+  margin-bottom: 25px;
+}
+
+.bsod-restart-btn {
+  margin-top: 15px;
+  padding: 8px 20px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #aaaaaa;
+  color: #0000aa;
+  border: 2px outset #ffffff;
+  cursor: pointer;
+}
+
+/* --- Simulated Boot / Splash Screen --- */
+#boot-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #000000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000001;
+}
+
+#boot-screen.active {
+  display: flex;
+}
+
+.boot-splash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  color: #ffffff;
+  font-family: 'Tahoma', sans-serif;
+}
+
+.boot-progress-bar {
+  width: 260px;
+  height: 18px;
+  background: #222;
+  border: 2px solid #666;
+  position: relative;
+  overflow: hidden;
+}
+
+.boot-progress-fill {
+  width: 0%;
+  height: 100%;
+  background: repeating-linear-gradient(90deg, #3366cc, #3366cc 10px, #224488 10px, #224488 20px);
+  animation: boot-load 2.5s infinite linear;
+}
+
+@keyframes boot-load {
+  0% { width: 5%; }
+  50% { width: 60%; }
+  100% { width: 100%; }
+}
+
+/* --- Clippy Easter Egg --- */
+#clippy-container {
+  position: fixed;
+  bottom: 46px;
+  right: 18px;
+  z-index: 99992;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: auto;
+}
+
+.clippy-bubble {
+  background: #ffffcc;
+  border: 1px solid #000;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.35;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  max-width: 210px;
+  margin-bottom: 6px;
+  position: relative;
+}
+
+.clippy-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 22px;
+  border-width: 8px 8px 0;
+  border-style: solid;
+  border-color: #ffffcc transparent;
+  display: block;
+  width: 0;
+}
+
+.clippy-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.clippy-avatar {
+  cursor: pointer;
+  filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.4));
+  transition: transform 0.2s ease;
+}
+
+.clippy-avatar:hover {
+  transform: scale(1.1);
+}
+
+/* --- Toast Feedback Notifications --- */
+#toast-notification {
+  position: fixed;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--win-gray);
+  border: 2px outset #ffffff;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+  padding: 6px 14px;
+  font-size: 11px;
+  display: none;
+  z-index: 99998;
+  font-weight: bold;
+}
+
+#toast-notification.show {
+  display: block;
+}
+
+/* --- Shake Animation for DO_NOT_CLICK --- */
+.screen-shake {
+  animation: earthquake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes earthquake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(3px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-5px, 0, 0); }
+  40%, 60% { transform: translate3d(5px, 0, 0); }
+}
+
+/* --- Matrix Digital Rain Canvas --- */
+#matrix-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999997;
+  pointer-events: none;
+  display: none;
+}
+
+#matrix-canvas.active {
+  display: block;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+  .window {
+    min-width: 94vw !important;
+    max-width: 96vw !important;
+    left: 2vw !important;
+  }
+  
+  .desktop-icons {
+    gap: 8px;
+  }
+  
+  .desktop-icon {
+    width: 68px;
+  }
+  
+  .desktop-icon img {
+    width: 30px;
+    height: 30px;
+  }
+
+  #start-menu {
+    width: 200px;
+  }
+
+  .taskbar-item {
+    max-width: 100px;
+  }
+  
+  .system-tray {
+    padding: 2px 4px;
+  }
+}
