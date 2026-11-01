@@ -2,15 +2,848 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=the-lost-pc/index.html">
-  <title>THE LOST PC - Booting Windows 98...</title>
-  <script>
-    window.location.replace("the-lost-pc/index.html");
-  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>THE LOST PC - Windows 98 Experience</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/svg+xml" href="assets/win98-logo.svg">
 </head>
-<body style="background-color: #008080; color: #ffffff; font-family: 'Tahoma', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0;">
-  <h2 style="margin-bottom: 8px;">THE LOST PC (Windows 98)</h2>
-  <p>Booting operating system... <a href="the-lost-pc/index.html" style="color: #ffff88; font-weight: bold;">Click here if not redirected automatically</a></p>
+<body>
+  <!-- CRT Scanline Filter Overlay -->
+  <div id="crt-overlay"></div>
+
+  <!-- Matrix Digital Rain Canvas Easter Egg -->
+  <canvas id="matrix-canvas"></canvas>
+
+  <!-- Desktop Workspace -->
+  <div id="desktop">
+    <!-- Desktop Icons -->
+    <div class="desktop-icons">
+      <div class="desktop-icon" data-app="my-computer" tabindex="0">
+        <img src="assets/my-computer.svg" alt="My Computer">
+        <span>My Computer</span>
+      </div>
+
+      <div class="desktop-icon" data-app="my-documents" tabindex="0">
+        <img src="assets/my-documents.svg" alt="My Documents">
+        <span>My Documents</span>
+      </div>
+
+      <div class="desktop-icon" data-app="recycle-bin" id="desktop-recycle-bin" tabindex="0">
+        <img src="assets/recycle-bin.svg" alt="Recycle Bin" id="recycle-bin-icon-img">
+        <span>Recycle Bin</span>
+      </div>
+
+      <div class="desktop-icon" data-app="notepad" tabindex="0">
+        <img src="assets/notepad.svg" alt="Notepad">
+        <span>Notepad</span>
+      </div>
+
+      <div class="desktop-icon" data-app="internet-explorer" tabindex="0">
+        <img src="assets/internet-explorer.svg" alt="Internet Explorer">
+        <span>Internet Explorer</span>
+      </div>
+
+      <div class="desktop-icon" data-app="minesweeper" tabindex="0">
+        <img src="assets/minesweeper.svg" alt="Minesweeper">
+        <span>Minesweeper</span>
+      </div>
+
+      <div class="desktop-icon" data-app="readme" tabindex="0">
+        <img src="assets/file-text.svg" alt="Read Me">
+        <span>READ_ME.txt</span>
+      </div>
+
+      <!-- Easter Egg Surprise Icon -->
+      <div class="desktop-icon hazard" data-app="danger-egg" tabindex="0" title="Click at your own risk!">
+        <img src="assets/danger.svg" alt="DO NOT CLICK">
+        <span>DO_NOT_CLICK.exe</span>
+      </div>
+    </div>
+
+    <!-- ==================== WINDOWS CONTAINERS ==================== -->
+
+    <!-- 1. My Computer Window -->
+    <div class="window win-outset" id="window-my-computer" style="top: 40px; left: 80px; width: 480px; height: 340px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/my-computer.svg" alt="">
+          <span>My Computer</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn maximize" title="Maximize">□</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-menubar">
+        <span class="menu-item" onclick="triggerMenu('File')">File</span>
+        <span class="menu-item" onclick="triggerMenu('Edit')">Edit</span>
+        <span class="menu-item" onclick="triggerMenu('View')">View</span>
+        <span class="menu-item" onclick="triggerMenu('Help')">Help</span>
+      </div>
+      <div class="window-toolbar">
+        <div class="address-bar">
+          <span>Address:</span>
+          <input type="text" value="My Computer" readonly class="win-inset">
+        </div>
+      </div>
+      <div class="window-content win-inset">
+        <div class="explorer-view" id="my-computer-items">
+          <div class="file-item" data-action="floppy-drive" tabindex="0">
+            <img src="assets/floppy.svg" alt="3½ Floppy (A:)">
+            <span>3½ Floppy (A:)</span>
+          </div>
+          <div class="file-item" data-action="open-c-drive" tabindex="0">
+            <img src="assets/hard-drive.svg" alt="Local Disk (C:)">
+            <span>Local Disk (C:)</span>
+          </div>
+          <div class="file-item" data-action="open-my-documents" tabindex="0">
+            <img src="assets/my-documents.svg" alt="My Documents">
+            <span>My Documents</span>
+          </div>
+          <div class="file-item" data-action="audio-cd" tabindex="0">
+            <img src="assets/sound.svg" alt="Audio CD (D:)">
+            <span>Audio CD (D:)</span>
+          </div>
+          <div class="file-item" data-action="open-control-panel" tabindex="0">
+            <img src="assets/calc.svg" alt="Control Panel">
+            <span>Control Panel</span>
+          </div>
+        </div>
+      </div>
+      <div class="window-statusbar">
+        <div class="status-pane" style="flex: 1;">5 object(s)</div>
+        <div class="status-pane">Free: 1.24 GB / 2.10 GB</div>
+      </div>
+    </div>
+
+    <!-- 2. Local Disk (C:) Window -->
+    <div class="window win-outset" id="window-c-drive" style="top: 70px; left: 110px; width: 460px; height: 320px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/hard-drive.svg" alt="">
+          <span>Local Disk (C:)</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn maximize" title="Maximize">□</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-menubar">
+        <span class="menu-item" onclick="triggerMenu('File')">File</span>
+        <span class="menu-item" onclick="triggerMenu('Edit')">Edit</span>
+        <span class="menu-item" onclick="triggerMenu('View')">View</span>
+        <span class="menu-item" onclick="triggerMenu('Help')">Help</span>
+      </div>
+      <div class="window-toolbar">
+        <button class="win-btn" onclick="openWindow('my-computer')">⬆ Up</button>
+        <div class="address-bar">
+          <span>Address:</span>
+          <input type="text" value="C:\" readonly class="win-inset">
+        </div>
+      </div>
+      <div class="window-content win-inset">
+        <div class="explorer-view">
+          <div class="file-item" data-action="open-my-documents" tabindex="0">
+            <img src="assets/my-documents.svg" alt="My Documents">
+            <span>My Documents</span>
+          </div>
+          <div class="file-item" data-action="show-system-folder" tabindex="0">
+            <img src="assets/folder.svg" alt="Program Files">
+            <span>Program Files</span>
+          </div>
+          <div class="file-item" data-action="show-system-folder" tabindex="0">
+            <img src="assets/folder.svg" alt="WINDOWS">
+            <span>WINDOWS</span>
+          </div>
+          <div class="file-item" data-action="open-secret-vault" tabindex="0">
+            <img src="assets/folder.svg" alt="Secret">
+            <span>Secret</span>
+          </div>
+          <div class="file-item" data-action="open-autoexec" tabindex="0">
+            <img src="assets/file-text.svg" alt="AUTOEXEC.BAT">
+            <span>AUTOEXEC.BAT</span>
+          </div>
+        </div>
+      </div>
+      <div class="window-statusbar">
+        <div class="status-pane" style="flex: 1;">5 object(s)</div>
+        <div class="status-pane">Capacity: 2.10 GB</div>
+      </div>
+    </div>
+
+    <!-- 3. My Documents Window -->
+    <div class="window win-outset" id="window-my-documents" style="top: 60px; left: 140px; width: 500px; height: 350px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/my-documents.svg" alt="">
+          <span>My Documents</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn maximize" title="Maximize">□</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-menubar">
+        <span class="menu-item" onclick="triggerMenu('File')">File</span>
+        <span class="menu-item" onclick="triggerMenu('Edit')">Edit</span>
+        <span class="menu-item" onclick="triggerMenu('View')">View</span>
+        <span class="menu-item" onclick="triggerMenu('Help')">Help</span>
+      </div>
+      <div class="window-toolbar">
+        <button class="win-btn" onclick="openWindow('my-computer')">⬆ Up</button>
+        <div class="address-bar">
+          <span>Address:</span>
+          <input type="text" value="C:\My Documents" readonly class="win-inset">
+        </div>
+      </div>
+      <div class="window-content win-inset">
+        <div class="explorer-view" id="my-docs-file-list">
+          <!-- Files required by prompt & original problem statement -->
+          <div class="file-item" data-open-file="read_me_first.txt" tabindex="0">
+            <img src="assets/file-text.svg" alt="Text file">
+            <span>read_me_first.txt</span>
+          </div>
+          <div class="file-item" data-open-file="secret_diary.txt" tabindex="0">
+            <img src="assets/file-text.svg" alt="Text file">
+            <span>secret_diary.txt</span>
+          </div>
+          <div class="file-item" data-open-image="old_memories.jpg" tabindex="0">
+            <img src="assets/file-image.svg" alt="Image file">
+            <span>old_memories.jpg</span>
+          </div>
+          <div class="file-item" data-open-image="world_cup_1998.jpg" tabindex="0">
+            <img src="assets/file-image.svg" alt="Image file">
+            <span>world_cup_1998.jpg</span>
+          </div>
+          <div class="file-item" data-open-image="titanic_1997.jpg" tabindex="0">
+            <img src="assets/file-image.svg" alt="Image file">
+            <span>titanic_1997.jpg</span>
+          </div>
+          <div class="file-item" data-open-image="most_wanted_list.jpg" tabindex="0">
+            <img src="assets/file-image.svg" alt="Image file">
+            <span>most_wanted_list.jpg</span>
+          </div>
+          <div class="file-item" data-open-image="news_clipping_2001.jpg" tabindex="0">
+            <img src="assets/file-image.svg" alt="Image file">
+            <span>news_clipping_2001.jpg</span>
+          </div>
+          <div class="file-item" data-action="open-secret-vault" tabindex="0">
+            <img src="assets/folder.svg" alt="Folder">
+            <span>Secret Folder</span>
+          </div>
+        </div>
+      </div>
+      <div class="window-statusbar">
+        <div class="status-pane" style="flex: 1;">8 object(s)</div>
+        <div class="status-pane">1.42 MB</div>
+      </div>
+    </div>
+
+    <!-- 4. Secret Folder Window (Easter Egg) -->
+    <div class="window win-outset" id="window-secret-folder" style="top: 90px; left: 170px; width: 440px; height: 300px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/folder.svg" alt="">
+          <span>C:\Secret - TOP SECRET</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn maximize" title="Maximize">□</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-toolbar">
+        <button class="win-btn" onclick="openWindow('my-documents')">⬆ Up</button>
+        <div class="address-bar">
+          <span>Address:</span>
+          <input type="text" value="C:\Secret" readonly class="win-inset">
+        </div>
+      </div>
+      <div class="window-content win-inset">
+        <div class="explorer-view">
+          <div class="file-item" data-open-file="hackathon_confidential.txt" tabindex="0">
+            <img src="assets/file-text.svg" alt="Confidential File">
+            <span>hackathon_confidential.txt</span>
+          </div>
+          <div class="file-item" data-open-file="time_machine_blueprints.txt" tabindex="0">
+            <img src="assets/file-text.svg" alt="Blueprints">
+            <span>blueprints.txt</span>
+          </div>
+          <div class="file-item" data-app="danger-egg" tabindex="0">
+            <img src="assets/danger.svg" alt="Self Destruct">
+            <span>DO_NOT_RUN.bat</span>
+          </div>
+        </div>
+      </div>
+      <div class="window-statusbar">
+        <div class="status-pane" style="flex: 1;">3 object(s) (CLASSIFIED)</div>
+      </div>
+    </div>
+
+    <!-- 5. Notepad Window -->
+    <div class="window win-outset" id="window-notepad" style="top: 50px; left: 160px; width: 520px; height: 380px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/notepad.svg" alt="">
+          <span id="notepad-title">Untitled - Notepad</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn maximize" title="Maximize">□</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-menubar">
+        <span class="menu-item" id="notepad-menu-new">New</span>
+        <span class="menu-item" id="notepad-menu-save">Save</span>
+        <span class="menu-item" id="notepad-menu-saveas">Save As...</span>
+        <span class="menu-item" id="notepad-menu-clear">Clear</span>
+        <span class="menu-item" id="notepad-menu-about">About</span>
+      </div>
+      <div class="window-content win-inset" style="padding: 0;">
+        <textarea id="notepad-textarea" class="notepad-editor" placeholder="Type here... You can save your note to Local Disk!"></textarea>
+      </div>
+      <div class="window-statusbar">
+        <div class="status-pane" style="flex: 1;" id="notepad-status">Ln 1, Col 1 | Saved: No</div>
+        <button class="win-btn" id="notepad-save-btn" style="height: 18px; font-size: 10px;">💾 Quick Save</button>
+      </div>
+    </div>
+
+    <!-- 6. Internet Explorer Window -->
+    <div class="window win-outset" id="window-internet-explorer" style="top: 30px; left: 100px; width: 580px; height: 420px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/internet-explorer.svg" alt="">
+          <span>Microsoft Internet Explorer 4.0 - The Lost PC</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn maximize" title="Maximize">□</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-menubar">
+        <span class="menu-item" onclick="ieGoHome()">Home</span>
+        <span class="menu-item" onclick="ieLoadUrl('http://www.google.com')">Google 1998</span>
+        <span class="menu-item" onclick="ieLoadUrl('http://www.geocities.com')">Geocities</span>
+        <span class="menu-item" onclick="ieLoadUrl('http://www.hackathon.org')">Hackathon 2026</span>
+      </div>
+      <div class="window-toolbar">
+        <button class="win-btn" id="ie-back-btn" title="Back">◄ Back</button>
+        <button class="win-btn" id="ie-fwd-btn" title="Forward">► Fwd</button>
+        <button class="win-btn" id="ie-stop-btn" title="Stop">✕ Stop</button>
+        <button class="win-btn" id="ie-refresh-btn" title="Refresh">↻ Refresh</button>
+        <button class="win-btn" id="ie-home-btn" title="Home">⌂ Home</button>
+        <div class="address-bar">
+          <span>Address:</span>
+          <input type="text" id="ie-address-bar" value="http://www.google.com" class="win-inset">
+          <button class="win-btn" id="ie-go-btn">Go</button>
+        </div>
+      </div>
+      <div class="window-content win-inset ie-body" id="ie-browser-frame">
+        <!-- Google 1998 Page View -->
+        <div class="ie-page google-page" id="ie-page-google">
+          <div class="google-logo">
+            <span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span><span style="color:#d93025; font-size:38px;">!</span>
+          </div>
+          <p style="font-size: 13px; color: #444; margin-bottom: 12px;">Search the web using Google! (Beta - late 1998)</p>
+          <div class="google-search-box">
+            <input type="text" id="google-search-input" class="win-inset" placeholder="Search the web (e.g. Gandhi Hackathon, Y2K, Windows 98)">
+            <div style="display:flex; justify-content:center; gap:8px;">
+              <button class="win-btn" id="google-search-btn">Google Search</button>
+              <button class="win-btn" id="google-lucky-btn">I'm feeling lucky</button>
+            </div>
+          </div>
+          <div class="search-results" id="google-search-results">
+            <!-- Dynamic search results appear here -->
+          </div>
+          <hr style="border: 0; border-top: 1px solid #ccc; margin: 20px 0;">
+          <p style="font-size: 11px; color: #666;">
+            Special Searches: <a href="javascript:void(0)" onclick="searchGoogle('Gandhi Hackathon')">Gandhi Hackathon</a> · 
+            <a href="javascript:void(0)" onclick="searchGoogle('IIT Bhilai')">IIT Bhilai</a> · 
+            <a href="javascript:void(0)" onclick="searchGoogle('Windows 98')">Windows 98</a> · 
+            <a href="javascript:void(0)" onclick="searchGoogle('Y2K bug')">Y2K Bug</a>
+          </p>
+          <p style="font-size: 10px; color: #888; margin-top: 14px;">Copyright ©1998 Google Inc. Best viewed with 800x600 resolution.</p>
+        </div>
+
+        <!-- Geocities 1998 Retro Page -->
+        <div class="ie-page geocities-page" id="ie-page-geocities" style="display: none;">
+          <div class="marquee-banner">
+            ★ ★ ★ WELCOME TO VIKRAM'S CYBER ZONE 1998 - UNDER CONSTRUCTION ★ ★ ★
+          </div>
+          <h2 style="color: #ffff00; font-family: 'Comic Sans MS', cursive;">Welcome to the 90s Web!</h2>
+          <p style="margin: 10px 0;">You are visitor number:</p>
+          <div class="counter-box">001337</div>
+          <p style="margin: 14px 0; color: #ff00ff;">
+            ♫ Currently playing: MIDI file - Darude Sandstorm ♫
+          </p>
+          <button class="win-btn" onclick="playDialupSound()" style="color:#000;">🔊 Play 56k Dial-Up Sound</button>
+          <div style="margin-top: 20px; border: 2px dashed #ffff00; padding: 10px;">
+            <p>🌐 Proud member of the IIT Bhilai Retro WebRing 🌐</p>
+            <p style="font-size: 11px; margin-top: 5px;">[Previous Site] · [Random] · [Next Site]</p>
+          </div>
+        </div>
+
+        <!-- Hackathon 2026 Special Page -->
+        <div class="ie-page" id="ie-page-hackathon" style="display: none; padding: 20px;">
+          <h2 style="color: #000080; border-bottom: 2px solid #000080; padding-bottom: 6px;">IIT Bhilai - Gandhi Hackathon 2026</h2>
+          <h4 style="color: #555; margin: 6px 0;">OpenLake × Meraz | Problem Statement: The Abandoned Computer</h4>
+          <div style="background-color: #ffffcc; border: 1px solid #808080; padding: 12px; margin: 15px 0;">
+            <strong>Judge Evaluation Checklist:</strong>
+            <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
+              <li>✔ Visual Authenticity: Authentic Windows 98 3D bevels, teal desktop & classic icons</li>
+              <li>✔ Interactive Applications: My Computer, Notepad, Explorer, Minesweeper & DOS</li>
+              <li>✔ LocalStorage persistence for Notepad</li>
+              <li>✔ Crazy Easter Eggs: BSOD, Error Cascade, Clippy, Matrix Mode, 56k Dial-Up Sound</li>
+              <li>✔ Responsive across desktop and mobile screens</li>
+            </ul>
+          </div>
+          <p><em>"You make us laugh and we give you points, deal!!"</em> — Section 04, Problem Statement</p>
+        </div>
+      </div>
+      <div class="window-statusbar">
+        <div class="status-pane" style="flex: 1;" id="ie-status">Done</div>
+        <div class="status-pane">Internet Zone</div>
+      </div>
+    </div>
+
+    <!-- 7. Recycle Bin Window -->
+    <div class="window win-outset" id="window-recycle-bin" style="top: 80px; left: 120px; width: 480px; height: 320px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/recycle-bin.svg" alt="">
+          <span>Recycle Bin</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn maximize" title="Maximize">□</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-toolbar">
+        <button class="win-btn" id="recycle-empty-btn">🗑 Empty Recycle Bin</button>
+        <button class="win-btn" id="recycle-restore-btn">↺ Restore All Items</button>
+        <div class="address-bar">
+          <span>Address:</span>
+          <input type="text" value="Recycle Bin" readonly class="win-inset">
+        </div>
+      </div>
+      <div class="window-content win-inset">
+        <div class="explorer-view" id="recycle-bin-items">
+          <div class="file-item" data-action="recycle-inspect" tabindex="0">
+            <img src="assets/file-text.svg" alt="File">
+            <span>homework_final_FINAL_v2.doc</span>
+          </div>
+          <div class="file-item" data-action="recycle-inspect" tabindex="0">
+            <img src="assets/sound.svg" alt="Audio">
+            <span>dialup_modem_screech.wav</span>
+          </div>
+          <div class="file-item" data-action="recycle-inspect" tabindex="0">
+            <img src="assets/file-text.svg" alt="File">
+            <span>y2k_survival_guide.txt</span>
+          </div>
+          <div class="file-item" data-action="recycle-inspect" tabindex="0">
+            <img src="assets/danger.svg" alt="Program">
+            <span>unnamed_secret_plan.exe</span>
+          </div>
+        </div>
+      </div>
+      <div class="window-statusbar">
+        <div class="status-pane" style="flex: 1;" id="recycle-status-text">4 object(s) | 1.84 MB</div>
+      </div>
+    </div>
+
+    <!-- 8. Image Viewer Window -->
+    <div class="window win-outset" id="window-image-viewer" style="top: 60px; left: 130px; width: 500px; height: 380px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/file-image.svg" alt="">
+          <span id="image-viewer-title">Image Viewer</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn maximize" title="Maximize">□</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-toolbar">
+        <button class="win-btn" id="img-zoom-in">🔍+ Zoom In</button>
+        <button class="win-btn" id="img-zoom-out">🔍- Zoom Out</button>
+        <button class="win-btn" id="img-reset">Reset Size</button>
+      </div>
+      <div class="window-content win-inset image-viewer-content">
+        <img id="image-viewer-img" src="" alt="Image Preview">
+      </div>
+      <div class="window-statusbar">
+        <div class="status-pane" style="flex: 1;" id="image-viewer-status">640 × 480 pixels | 24-bit TrueColor</div>
+      </div>
+    </div>
+
+    <!-- 9. Minesweeper Window -->
+    <div class="window win-outset" id="window-minesweeper" style="top: 70px; left: 180px; width: 236px; height: 310px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/minesweeper.svg" alt="">
+          <span>Minesweeper</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-menubar">
+        <span class="menu-item" onclick="initMinesweeper()">Game</span>
+        <span class="menu-item" onclick="showModal('Minesweeper 1998', 'Standard 9x9 grid with 10 mines. Left click reveals, right click or long press flags a mine!')">Help</span>
+      </div>
+      <div class="window-content win-inset minesweeper-wrap">
+        <div class="minesweeper-header">
+          <div class="lcd-display" id="mines-counter">010</div>
+          <button class="win-btn minesweeper-face" id="minesweeper-face-btn">🙂</button>
+          <div class="lcd-display" id="mines-timer">000</div>
+        </div>
+        <div class="minesweeper-grid" id="minesweeper-grid">
+          <!-- 9x9 cells populated dynamically by script.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. Calculator Window -->
+    <div class="window win-outset" id="window-calc" style="top: 80px; left: 220px; width: 220px; height: 260px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/calc.svg" alt="">
+          <span>Calculator</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-content win-inset calc-wrap">
+        <input type="text" id="calc-screen" class="calc-display" value="0" readonly>
+        <div class="calc-grid">
+          <button class="win-btn" onclick="calcInput('7')">7</button>
+          <button class="win-btn" onclick="calcInput('8')">8</button>
+          <button class="win-btn" onclick="calcInput('9')">9</button>
+          <button class="win-btn" onclick="calcOp('/')">/</button>
+
+          <button class="win-btn" onclick="calcInput('4')">4</button>
+          <button class="win-btn" onclick="calcInput('5')">5</button>
+          <button class="win-btn" onclick="calcInput('6')">6</button>
+          <button class="win-btn" onclick="calcOp('*')">*</button>
+
+          <button class="win-btn" onclick="calcInput('1')">1</button>
+          <button class="win-btn" onclick="calcInput('2')">2</button>
+          <button class="win-btn" onclick="calcInput('3')">3</button>
+          <button class="win-btn" onclick="calcOp('-')">-</button>
+
+          <button class="win-btn" onclick="calcInput('0')">0</button>
+          <button class="win-btn" onclick="calcClear()">C</button>
+          <button class="win-btn" onclick="calcEquals()">=</button>
+          <button class="win-btn" onclick="calcOp('+')">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. MS-DOS Prompt Window -->
+    <div class="window win-outset" id="window-dos" style="top: 60px; left: 100px; width: 540px; height: 340px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/msdos.svg" alt="">
+          <span>MS-DOS Prompt</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn maximize" title="Maximize">□</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-content win-inset dos-content" id="dos-output" onclick="document.getElementById('dos-input').focus()">
+        <div>Microsoft(R) Windows 98</div>
+        <div>(C)Copyright Microsoft Corp 1981-1998.</div>
+        <div style="margin: 6px 0; color: #ffff00;">Type 'help' for available retro commands, or 'matrix', 'hack', 'bsod'.</div>
+        <div id="dos-history"></div>
+        <div class="dos-input-line">
+          <span>C:\WINDOWS&gt;</span>
+          <input type="text" id="dos-input" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+    </div>
+
+    <!-- 12. Run Dialog Window -->
+    <div class="window win-outset" id="window-run" style="top: 150px; left: 180px; width: 360px; height: 160px; display: none; z-index: 99996;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/win98-logo.svg" alt="">
+          <span>Run</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-content win-outset" style="padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+        <p style="font-size: 11px;">Type the name of a program, folder, or document, and Windows will open it for you.</p>
+        <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+          <span>Open:</span>
+          <input type="text" id="run-dialog-input" class="win-inset" style="flex: 1; padding: 3px;" placeholder="e.g. notepad, calc, cmd, bsod, matrix">
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 6px; margin-top: 10px;">
+          <button class="win-btn" id="run-dialog-ok">OK</button>
+          <button class="win-btn" id="run-dialog-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13. Control Panel Window -->
+    <div class="window win-outset" id="window-control-panel" style="top: 70px; left: 150px; width: 440px; height: 320px; display: none;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/calc.svg" alt="">
+          <span>Control Panel</span>
+        </div>
+        <div class="window-controls">
+          <button class="win-control-btn minimize" title="Minimize">_</button>
+          <button class="win-control-btn close" title="Close">×</button>
+        </div>
+      </div>
+      <div class="window-content win-inset" style="padding: 16px; display: flex; flex-direction: column; gap: 14px;">
+        <h4 style="border-bottom: 1px solid #ccc; padding-bottom: 4px;">Display & Sound Properties</h4>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span>CRT Monitor Scanline Overlay:</span>
+          <button class="win-btn" id="toggle-crt-btn">Toggle Scanlines (OFF)</button>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span>Sound Effects & PC Chimes:</span>
+          <button class="win-btn" id="toggle-sound-btn">Sound: ON 🔊</button>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <span>Desktop Theme Color:</span>
+          <select id="theme-color-select" class="win-inset" style="padding: 2px;">
+            <option value="#008080">Windows 98 Classic Teal</option>
+            <option value="#3a6ea5">Navy Blue 98</option>
+            <option value="#555555">Industrial Gray</option>
+            <option value="#0d1b2a">Midnight Black</option>
+          </select>
+        </div>
+        <div style="margin-top: 10px; padding: 8px; background: #e0f0ff; border: 1px solid #808080; font-size: 11px;">
+          <strong>Computer Specs:</strong> Intel Pentium II 300MHz, 64MB SDRAM, 2.1GB Quantum Fireball HDD, 56k V.90 Fax Modem.
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- End #desktop -->
+
+  <!-- ==================== CLIPPY EASTER EGG ==================== -->
+  <div id="clippy-container">
+    <div class="clippy-bubble" id="clippy-speech">
+      <div id="clippy-text">It looks like you discovered an abandoned PC from 1998! Need help exploring secret files or winning the hackathon?</div>
+      <div class="clippy-actions">
+        <button class="win-btn" id="clippy-joke-btn" style="font-size: 10px;">Next Tip</button>
+        <button class="win-btn" id="clippy-dismiss-btn" style="font-size: 10px;">Dismiss</button>
+      </div>
+    </div>
+    <img src="assets/clippy.svg" alt="Clippy" class="clippy-avatar" id="clippy-avatar" title="Click me for funny tips!">
+  </div>
+
+  <!-- ==================== START MENU ==================== -->
+  <div id="start-menu" class="win-outset">
+    <div class="start-sidebar">
+      <div class="start-sidebar-text">Windows<span>98</span></div>
+    </div>
+    <div class="start-items">
+      <div class="start-menu-item has-submenu">
+        <img src="assets/folder.svg" alt="">
+        <span>Programs</span>
+        <div class="submenu win-outset">
+          <div class="start-menu-item" onclick="openWindow('notepad')">
+            <img src="assets/notepad.svg" alt="">
+            <span>Notepad</span>
+          </div>
+          <div class="start-menu-item" onclick="openWindow('internet-explorer')">
+            <img src="assets/internet-explorer.svg" alt="">
+            <span>Internet Explorer</span>
+          </div>
+          <div class="start-menu-item" onclick="openWindow('minesweeper')">
+            <img src="assets/minesweeper.svg" alt="">
+            <span>Minesweeper</span>
+          </div>
+          <div class="start-menu-item" onclick="openWindow('calc')">
+            <img src="assets/calc.svg" alt="">
+            <span>Calculator</span>
+          </div>
+          <div class="start-menu-item" onclick="openWindow('dos')">
+            <img src="assets/msdos.svg" alt="">
+            <span>MS-DOS Prompt</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="start-menu-item has-submenu">
+        <img src="assets/my-documents.svg" alt="">
+        <span>Favorites</span>
+        <div class="submenu win-outset">
+          <div class="start-menu-item" onclick="openFile('read_me_first.txt')">
+            <img src="assets/file-text.svg" alt="">
+            <span>read_me_first.txt</span>
+          </div>
+          <div class="start-menu-item" onclick="openFile('secret_diary.txt')">
+            <img src="assets/file-text.svg" alt="">
+            <span>secret_diary.txt</span>
+          </div>
+          <div class="start-menu-item" onclick="openImageFile('old_memories.jpg')">
+            <img src="assets/file-image.svg" alt="">
+            <span>old_memories.jpg</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="start-menu-item" onclick="openWindow('my-documents')">
+        <img src="assets/folder.svg" alt="">
+        <span>Documents</span>
+      </div>
+
+      <div class="start-menu-item" onclick="openWindow('control-panel')">
+        <img src="assets/calc.svg" alt="">
+        <span>Settings</span>
+      </div>
+
+      <div class="start-menu-item" onclick="openWindow('internet-explorer'); ieLoadUrl('http://www.hackathon.org')">
+        <img src="assets/file-text.svg" alt="">
+        <span>Help & Guidelines</span>
+      </div>
+
+      <div class="start-menu-item" onclick="openRunDialog()">
+        <img src="assets/msdos.svg" alt="">
+        <span>Run...</span>
+      </div>
+
+      <div class="start-menu-divider"></div>
+
+      <div class="start-menu-item" onclick="triggerShutdownDialog()">
+        <img src="assets/danger.svg" alt="">
+        <span>Shut Down...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== BOTTOM TASKBAR ==================== -->
+  <div id="taskbar">
+    <button class="win-btn" id="start-button">
+      <img src="assets/win98-logo.svg" alt="Win98">
+      <span>Start</span>
+    </button>
+
+    <div class="taskbar-tasks" id="taskbar-tasks">
+      <!-- Task buttons for open windows are injected here dynamically -->
+    </div>
+
+    <div class="system-tray">
+      <img src="assets/sound.svg" alt="Sound" class="tray-icon" id="tray-sound-icon" title="Sound: Click to Mute/Unmute">
+      <img src="assets/danger.svg" alt="Alert" class="tray-icon" onclick="triggerChaosError()" title="Warning: Unstable Y2K Core!">
+      <span id="digital-clock">03:45 PM</span>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL / POPUP DIALOGS ==================== -->
+  <div class="modal-overlay" id="modal-dialog">
+    <div class="dialog-box win-outset">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/danger.svg" alt="" id="modal-title-icon">
+          <span id="modal-title-text">System Error</span>
+        </div>
+        <button class="win-control-btn close" onclick="closeModal()">×</button>
+      </div>
+      <div class="dialog-body">
+        <img src="assets/danger.svg" alt="" class="dialog-icon" id="modal-body-icon">
+        <div class="dialog-message" id="modal-message-text">A system error has occurred.</div>
+      </div>
+      <div class="dialog-actions">
+        <button class="win-btn" id="modal-btn-ok" onclick="closeModal()">OK</button>
+        <button class="win-btn" id="modal-btn-cancel" onclick="closeModal()" style="display:none;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SHUTDOWN DIALOG ==================== -->
+  <div class="modal-overlay" id="shutdown-dialog">
+    <div class="dialog-box win-outset" style="width: 360px;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/win98-logo.svg" alt="">
+          <span>Shut Down Windows</span>
+        </div>
+        <button class="win-control-btn close" onclick="closeShutdownDialog()">×</button>
+      </div>
+      <div class="dialog-body" style="align-items: flex-start; padding: 14px 16px;">
+        <img src="assets/win98-logo.svg" alt="" style="width: 36px; height: 36px; margin-right: 8px;">
+        <div style="flex: 1;">
+          <p style="font-weight: bold; margin-bottom: 10px;">What do you want the computer to do?</p>
+          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11px;">
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+              <input type="radio" name="shutdown-option" value="restart" checked> Restart
+            </label>
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+              <input type="radio" name="shutdown-option" value="shutdown"> Shut down
+            </label>
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+              <input type="radio" name="shutdown-option" value="dos"> Restart in MS-DOS mode
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-actions" style="border-top: 1px solid var(--win-dark); padding: 8px 12px;">
+        <button class="win-btn" id="shutdown-ok-btn" style="min-width: 65px;">OK</button>
+        <button class="win-btn" id="shutdown-cancel-btn" onclick="closeShutdownDialog()" style="min-width: 65px;">Cancel</button>
+        <button class="win-btn" onclick="showModal('Shut Down Help', 'Select an option and click OK to confirm, or click Cancel to return to the Windows 98 desktop.')" style="min-width: 65px;">Help</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== BLUE SCREEN OF DEATH (BSOD) ==================== -->
+  <div id="bsod">
+    <div class="bsod-header">Windows 98</div>
+    <div class="bsod-text">
+      A fatal exception 0E has occurred at 0028:C0011E36 in VXD VMM(01) + 00010E36.<br>
+      The current application will be terminated.<br><br>
+      * Reason: The Gandhi Hackathon judges were overly astonished by the retro accuracy.<br>
+      * Recommendation: Award 100/100 points to resolve this kernel panic immediately.<br><br>
+      * Press any key to restart your computer.<br>
+      * Press CTRL+ALT+DEL to send coffee to the developers.
+    </div>
+    <button class="bsod-restart-btn" id="bsod-restart-button">Click Here to Restart Computer</button>
+  </div>
+
+  <!-- ==================== SIMULATED BOOT / SPLASH SCREEN ==================== -->
+  <div id="boot-screen">
+    <div class="boot-splash">
+      <div style="font-family: monospace; color: #00ff00; font-size: 14px; text-align: left; max-width: 500px;">
+        Award Modular BIOS v4.51PG, An Energy Star Ally<br>
+        Copyright (C) 1984-98, Award Software, Inc.<br><br>
+        PENTIUM II-MMX CPU at 300MHz<br>
+        Memory Test :  65536K OK<br>
+        Detecting IDE Primary Master  ... QUANTUM FIREBALL 2.1GB<br>
+        Detecting IDE Secondary Master ... SONY CD-ROM CDU-701<br>
+        Booting from C:\WINDOWS...
+      </div>
+      <div style="margin-top: 30px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+        <img src="assets/win98-logo.svg" style="width: 64px; height: 64px;" alt="Windows 98">
+        <div style="font-size: 20px; font-weight: bold; letter-spacing: 1px;">Microsoft Windows 98</div>
+        <div class="boot-progress-bar">
+          <div class="boot-progress-fill"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST FEEDBACK NOTIFICATION ==================== -->
+  <div id="toast-notification">Notification text</div>
+
+  <script src="script.js"></script>
 </body>
 </html>
 
