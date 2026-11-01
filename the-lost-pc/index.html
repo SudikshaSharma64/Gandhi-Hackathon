@@ -201,7 +201,7 @@
       </div>
       <div class="window-content win-inset">
         <div class="explorer-view" id="my-docs-file-list">
-          <!-- Files required by prompt -->
+          <!-- Files required by prompt & original problem statement -->
           <div class="file-item" data-open-file="read_me_first.txt" tabindex="0">
             <img src="assets/file-text.svg" alt="Text file">
             <span>read_me_first.txt</span>
@@ -222,6 +222,14 @@
             <img src="assets/file-image.svg" alt="Image file">
             <span>titanic_1997.jpg</span>
           </div>
+          <div class="file-item" data-open-image="most_wanted_list.jpg" tabindex="0">
+            <img src="assets/file-image.svg" alt="Image file">
+            <span>most_wanted_list.jpg</span>
+          </div>
+          <div class="file-item" data-open-image="news_clipping_2001.jpg" tabindex="0">
+            <img src="assets/file-image.svg" alt="Image file">
+            <span>news_clipping_2001.jpg</span>
+          </div>
           <div class="file-item" data-action="open-secret-vault" tabindex="0">
             <img src="assets/folder.svg" alt="Folder">
             <span>Secret Folder</span>
@@ -229,8 +237,8 @@
         </div>
       </div>
       <div class="window-statusbar">
-        <div class="status-pane" style="flex: 1;">6 object(s)</div>
-        <div class="status-pane">842 KB</div>
+        <div class="status-pane" style="flex: 1;">8 object(s)</div>
+        <div class="status-pane">1.42 MB</div>
       </div>
     </div>
 
@@ -757,6 +765,41 @@
       <div class="dialog-actions">
         <button class="win-btn" id="modal-btn-ok" onclick="closeModal()">OK</button>
         <button class="win-btn" id="modal-btn-cancel" onclick="closeModal()" style="display:none;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SHUTDOWN DIALOG ==================== -->
+  <div class="modal-overlay" id="shutdown-dialog">
+    <div class="dialog-box win-outset" style="width: 360px;">
+      <div class="window-titlebar">
+        <div class="window-title">
+          <img src="assets/win98-logo.svg" alt="">
+          <span>Shut Down Windows</span>
+        </div>
+        <button class="win-control-btn close" onclick="closeShutdownDialog()">×</button>
+      </div>
+      <div class="dialog-body" style="align-items: flex-start; padding: 14px 16px;">
+        <img src="assets/win98-logo.svg" alt="" style="width: 36px; height: 36px; margin-right: 8px;">
+        <div style="flex: 1;">
+          <p style="font-weight: bold; margin-bottom: 10px;">What do you want the computer to do?</p>
+          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11px;">
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+              <input type="radio" name="shutdown-option" value="restart" checked> Restart
+            </label>
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+              <input type="radio" name="shutdown-option" value="shutdown"> Shut down
+            </label>
+            <label style="cursor: pointer; display: flex; align-items: center; gap: 6px;">
+              <input type="radio" name="shutdown-option" value="dos"> Restart in MS-DOS mode
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-actions" style="border-top: 1px solid var(--win-dark); padding: 8px 12px;">
+        <button class="win-btn" id="shutdown-ok-btn" style="min-width: 65px;">OK</button>
+        <button class="win-btn" id="shutdown-cancel-btn" onclick="closeShutdownDialog()" style="min-width: 65px;">Cancel</button>
+        <button class="win-btn" onclick="showModal('Shut Down Help', 'Select an option and click OK to confirm, or click Cancel to return to the Windows 98 desktop.')" style="min-width: 65px;">Help</button>
       </div>
     </div>
   </div>

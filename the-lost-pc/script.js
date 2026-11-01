@@ -601,18 +601,35 @@ function openFile(fileName) {
   openWindow("notepad");
 }
 
+let imageViewerScale = 1.0;
+
+function updateImageViewerStatus() {
+  const imgEl = document.getElementById("image-viewer-img");
+  const statusEl = document.getElementById("image-viewer-status");
+  if (!imgEl || !statusEl) return;
+  const nw = imgEl.naturalWidth || 640;
+  const nh = imgEl.naturalHeight || 480;
+  const pct = Math.round(imageViewerScale * 100);
+  statusEl.textContent = `${nw} × ${nh} pixels | Zoom: ${pct}% | 24-bit TrueColor`;
+}
+
 function openImageFile(fileName) {
   playClickSound();
   const imgEl = document.getElementById("image-viewer-img");
   const titleEl = document.getElementById("image-viewer-title");
-  const statusEl = document.getElementById("image-viewer-status");
 
-  imgEl.src = `assets/${fileName}`;
+  imageViewerScale = 1.0;
   imgEl.style.transform = "scale(1)";
+  imgEl.src = `assets/${fileName}`;
   titleEl.textContent = `Image Viewer - ${fileName}`;
-  statusEl.textContent = `${fileName} | 640 × 480 | 24-bit TrueColor`;
+
+  imgEl.onload = () => {
+    updateImageViewerStatus();
+  };
 
   openWindow("image-viewer");
+  const win = document.getElementById("window-image-viewer");
+  bringToFront(win);
 }
 
 // ============================================================================
@@ -1349,14 +1366,39 @@ function rebootSystem() {
 function triggerShutdownDialog() {
   playClickSound();
   closeStartMenu();
-  showModal(
-    "Shut Down Windows",
-    "What do you want the computer to do?\n\n• Shut down the computer\n• Restart the computer in MS-DOS mode",
-    true,
-    () => {
+  const dlg = document.getElementById("shutdown-dialog");
+  if (dlg) {
+    dlg.classList.add("open");
+  } else {
+    showModal("Shut Down Windows", "Would you like to restart Windows 98?", true, () => rebootSystem());
+  }
+}
+
+function closeShutdownDialog() {
+  playClickSound();
+  const dlg = document.getElementById("shutdown-dialog");
+  if (dlg) dlg.classList.remove("open");
+}
+
+function setupShutdownDialog() {
+  const okBtn = document.getElementById("shutdown-ok-btn");
+  if (!okBtn) return;
+
+  okBtn.addEventListener("click", () => {
+    closeShutdownDialog();
+    const selected = document.querySelector('input[name="shutdown-option"]:checked')?.value || "restart";
+    if (selected === "restart") {
       rebootSystem();
+    } else if (selected === "dos") {
+      openWindow("dos");
+      const dosWin = document.getElementById("window-dos");
+      if (dosWin) maximizeWindow("dos");
+      showToast("Restarted in MS-DOS Mode. Type 'exit' to return.");
+    } else if (selected === "shutdown") {
+      // Classic "It's now safe to turn off your computer"
+      showModal("Power Off", "It's now safe to turn off your computer.\n\n(Click OK to reboot back into Windows 98)", false, () => rebootSystem());
     }
-  );
+  });
 }
 
 // ============================================================================
@@ -1506,26 +1548,33 @@ function setupImageViewerControls() {
   const zoomOut = document.getElementById("img-zoom-out");
   const resetBtn = document.getElementById("img-reset");
 
-  let currentScale = 1;
-
   if (zoomIn) {
-    zoomIn.addEventListener("click", () => {
-      currentScale += 0.2;
-      img.style.transform = `scale(${currentScale})`;
+    zoomIn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      playClickSound();
+      imageViewerScale = Math.min(3.0, +(imageViewerScale + 0.25).toFixed(2));
+      img.style.transform = `scale(${imageViewerScale})`;
+      updateImageViewerStatus();
     });
   }
 
   if (zoomOut) {
-    zoomOut.addEventListener("click", () => {
-      currentScale = Math.max(0.4, currentScale - 0.2);
-      img.style.transform = `scale(${currentScale})`;
+    zoomOut.addEventListener("click", (e) => {
+      e.stopPropagation();
+      playClickSound();
+      imageViewerScale = Math.max(0.25, +(imageViewerScale - 0.25).toFixed(2));
+      img.style.transform = `scale(${imageViewerScale})`;
+      updateImageViewerStatus();
     });
   }
 
   if (resetBtn) {
-    resetBtn.addEventListener("click", () => {
-      currentScale = 1;
+    resetBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      playClickSound();
+      imageViewerScale = 1.0;
       img.style.transform = "scale(1)";
+      updateImageViewerStatus();
     });
   }
 }
@@ -1540,26 +1589,40 @@ document.addEventListener("DOMContentLoaded", () => {
     setupWindowDraggable(win);
   });
 
-  // 2. Setup Desktop Icons
+  // 2. Setup Desktop Icons (Single-click select, Double-click open)
   document.querySelectorAll(".desktop-icon").forEach((icon) => {
+    let lastTap = 0;
+
     icon.addEventListener("click", (e) => {
+      e.stopPropagation();
       playClickSound();
       document.querySelectorAll(".desktop-icon").forEach((i) => i.classList.remove("selected"));
       icon.classList.add("selected");
     });
 
-    icon.addEventListener("dblclick", () => {
+    icon.addEventListener("dblclick", (e) => {
+      e.stopPropagation();
       const app = icon.dataset.app;
       handleAppLaunch(app);
     });
 
-    // Touch support (tap opens icon)
-    let lastTap = 0;
+    icon.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleAppLaunch(icon.dataset.app);
+      }
+    });
+
+    // Touch support: double-tap opens, single tap selects
     icon.addEventListener("touchend", (e) => {
       const curTime = new Date().getTime();
       const tapLen = curTime - lastTap;
-      if (tapLen < 500 && tapLen > 0) {
+      if (tapLen < 350 && tapLen > 0) {
+        e.preventDefault();
         handleAppLaunch(icon.dataset.app);
+      } else {
+        document.querySelectorAll(".desktop-icon").forEach((i) => i.classList.remove("selected"));
+        icon.classList.add("selected");
       }
       lastTap = curTime;
     });
@@ -1577,7 +1640,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Deselect icons when clicking desktop background
   document.getElementById("desktop").addEventListener("click", (e) => {
-    if (e.target.id === "desktop") {
+    if (e.target.id === "desktop" || e.target.classList.contains("desktop-icons")) {
       document.querySelectorAll(".desktop-icon").forEach((i) => i.classList.remove("selected"));
       closeStartMenu();
     }
@@ -1611,42 +1674,84 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 4. File Explorer Items (My Computer & My Documents)
-  document.querySelectorAll("[data-action]").forEach((item) => {
-    item.addEventListener("click", () => {
+  // 4. File Explorer Items (Single-click select, Double-click open)
+  function executeExplorerItem(item) {
+    const action = item.dataset.action;
+    const file = item.dataset.openFile;
+    const img = item.dataset.openImage;
+
+    if (file) {
+      openFile(file);
+    } else if (img) {
+      openImageFile(img);
+    } else if (action === "floppy-drive") {
+      showModal("3½ Floppy (A:)", "Please insert a disk into drive A:\n\n*mechanical grinding noises*");
+    } else if (action === "open-c-drive") {
+      openWindow("c-drive");
+    } else if (action === "open-my-documents") {
+      openWindow("my-documents");
+    } else if (action === "audio-cd") {
+      playStartupSound();
+      showModal("Audio CD (D:)", "Now Playing:\nTrack 1 - Eiffel 65 - Blue (Da Ba Dee)\nAudio volume: 100%");
+    } else if (action === "open-control-panel") {
+      openWindow("control-panel");
+    } else if (action === "open-secret-vault") {
+      openWindow("secret-folder");
+    } else if (action === "show-system-folder") {
+      showModal("System Folder", "This folder contains system files that cannot be edited.");
+    } else if (action === "open-autoexec") {
+      openFile("autoexec.bat");
+    }
+  }
+
+  document.querySelectorAll(".file-item").forEach((item) => {
+    let lastTap = 0;
+
+    item.addEventListener("click", (e) => {
+      e.stopPropagation();
       playClickSound();
-      const action = item.dataset.action;
-      if (action === "floppy-drive") {
-        showModal("3½ Floppy (A:)", "Please insert a disk into drive A:\n\n*mechanical grinding noises*");
-      } else if (action === "open-c-drive") {
-        openWindow("c-drive");
-      } else if (action === "open-my-documents") {
-        openWindow("my-documents");
-      } else if (action === "audio-cd") {
-        playStartupSound();
-        showModal("Audio CD (D:)", "Now Playing:\nTrack 1 - Eiffel 65 - Blue (Da Ba Dee)\nAudio volume: 100%");
-      } else if (action === "open-control-panel") {
-        openWindow("control-panel");
-      } else if (action === "open-secret-vault") {
-        openWindow("secret-folder");
-      } else if (action === "show-system-folder") {
-        showModal("System Folder", "This folder contains system files that cannot be edited.");
-      } else if (action === "open-autoexec") {
-        openFile("autoexec.bat");
+      const parentView = item.closest(".explorer-view");
+      if (parentView) {
+        parentView.querySelectorAll(".file-item").forEach((f) => f.classList.remove("selected"));
+      }
+      item.classList.add("selected");
+    });
+
+    item.addEventListener("dblclick", (e) => {
+      e.stopPropagation();
+      executeExplorerItem(item);
+    });
+
+    item.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        executeExplorerItem(item);
       }
     });
-  });
 
-  // Data open file & open image triggers
-  document.querySelectorAll("[data-open-file]").forEach((item) => {
-    item.addEventListener("click", () => {
-      openFile(item.dataset.openFile);
+    item.addEventListener("touchend", (e) => {
+      const curTime = new Date().getTime();
+      const tapLen = curTime - lastTap;
+      if (tapLen < 350 && tapLen > 0) {
+        e.preventDefault();
+        executeExplorerItem(item);
+      } else {
+        const parentView = item.closest(".explorer-view");
+        if (parentView) {
+          parentView.querySelectorAll(".file-item").forEach((f) => f.classList.remove("selected"));
+        }
+        item.classList.add("selected");
+      }
+      lastTap = curTime;
     });
   });
 
-  document.querySelectorAll("[data-open-image]").forEach((item) => {
-    item.addEventListener("click", () => {
-      openImageFile(item.dataset.openImage);
+  // Clicking blank explorer view deselects files
+  document.querySelectorAll(".explorer-view").forEach((view) => {
+    view.addEventListener("click", (e) => {
+      if (e.target === view) {
+        view.querySelectorAll(".file-item").forEach((f) => f.classList.remove("selected"));
+      }
     });
   });
 
@@ -1659,6 +1764,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupRunDialog();
   setupControlPanel();
   setupImageViewerControls();
+  setupShutdownDialog();
 
   // 6. Clock & Initial Sounds
   updateSystemClock();

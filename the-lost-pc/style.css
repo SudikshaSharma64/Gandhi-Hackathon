@@ -142,6 +142,7 @@ body.crt-active #crt-overlay {
   height: 36px;
   margin-bottom: 4px;
   filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.5));
+  pointer-events: none;
 }
 
 .desktop-icon span {
@@ -152,6 +153,7 @@ body.crt-active #crt-overlay {
   word-break: break-word;
   text-shadow: 1px 1px 2px #000;
   border: 1px dotted transparent;
+  pointer-events: none;
 }
 
 .desktop-icon:hover {
@@ -159,12 +161,13 @@ body.crt-active #crt-overlay {
 }
 
 .desktop-icon.selected {
-  border: 1px dotted #ffff88;
+  outline: 1px dotted #ffffff;
 }
 
 .desktop-icon.selected span {
   background-color: var(--win-selection);
-  border: 1px dotted #ffff88;
+  border: 1px dotted #ffffff;
+  color: #ffffff;
   text-shadow: none;
 }
 
@@ -379,6 +382,7 @@ body.crt-active #crt-overlay {
   width: 32px;
   height: 32px;
   margin-bottom: 4px;
+  pointer-events: none;
 }
 
 .file-item span {
@@ -386,6 +390,9 @@ body.crt-active #crt-overlay {
   color: var(--win-black);
   word-break: break-word;
   line-height: 1.2;
+  padding: 1px 4px;
+  border: 1px dotted transparent;
+  pointer-events: none;
 }
 
 .file-item:hover {
@@ -393,10 +400,12 @@ body.crt-active #crt-overlay {
 }
 
 .file-item.selected {
-  background-color: var(--win-selection);
+  background-color: #cce8ff;
+  outline: 1px dotted #000080;
 }
 
 .file-item.selected span {
+  background-color: var(--win-selection);
   color: var(--win-white);
 }
 
@@ -407,13 +416,15 @@ body.crt-active #crt-overlay {
   resize: none;
   outline: none;
   border: none;
-  padding: 6px;
+  padding: 8px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 13px;
   line-height: 1.4;
   white-space: pre-wrap;
-  color: #000;
-  background-color: #fff;
+  word-break: break-word;
+  overflow-y: auto;
+  color: #000000;
+  background-color: #ffffff;
 }
 
 /* --- Internet Explorer --- */
@@ -521,19 +532,23 @@ body.crt-active #crt-overlay {
 .image-viewer-content {
   flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   background-color: #808080;
-  padding: 10px;
+  padding: 12px;
   overflow: auto;
+  position: relative;
 }
 
 .image-viewer-content img {
-  max-width: 90%;
-  max-height: 80%;
-  box-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+  max-width: 95%;
+  max-height: 85%;
+  object-fit: contain;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
   border: 1px solid #404040;
+  transform-origin: center center;
+  transition: transform 0.12s ease-out;
+  background-color: #222222;
 }
 
 /* --- Minesweeper App --- */
