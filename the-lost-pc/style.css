@@ -1143,30 +1143,65 @@ body.crt-active #crt-overlay {
     min-width: 94vw !important;
     max-width: 96vw !important;
     left: 2vw !important;
+    top: 6px !important;
+    max-height: calc(100vh - var(--taskbar-height) - 12px) !important;
   }
   
+  .win-control-btn {
+    width: 22px;
+    height: 18px;
+    font-size: 12px;
+  }
+
   .desktop-icons {
-    gap: 8px;
+    gap: 6px;
   }
   
   .desktop-icon {
     width: 68px;
+    padding: 2px;
   }
   
   .desktop-icon img {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
   }
 
   #start-menu {
-    width: 200px;
+    width: 210px;
+    max-height: 80vh;
+  }
+
+  .submenu {
+    left: 20px;
+    top: 100%;
+    width: 175px;
   }
 
   .taskbar-item {
-    max-width: 100px;
+    max-width: 95px;
+    min-width: 55px;
+    padding: 2px 4px;
   }
   
   .system-tray {
     padding: 2px 4px;
+    gap: 3px;
+  }
+
+  #clippy-container {
+    bottom: 42px;
+    right: 8px;
+  }
+
+  .clippy-bubble {
+    max-width: 180px;
+    font-size: 10px;
+  }
+
+  .clippy-avatar {
+    width: 32px;
+    height: 32px;
   }
 }
+

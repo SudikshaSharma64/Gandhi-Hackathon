@@ -1445,7 +1445,21 @@ function showToast(message) {
 }
 
 function triggerMenu(name) {
-  showToast(`Menu option: ${name} clicked.`);
+  playClickSound();
+  if (name === "Help") {
+    showModal(
+      "Windows 98 Help",
+      "Welcome to THE LOST PC Help System!\n\n• Double-click desktop icons to open applications.\n• Double-click files to open them in Notepad or Image Viewer.\n• Notepad saves notes permanently using localStorage.\n• Explore C:\\Secret for hidden hackathon blueprints!\n• Warning: DO_NOT_CLICK.exe will trigger a simulated BSOD."
+    );
+  } else if (name === "View") {
+    showToast("Folder view refreshed.");
+  } else if (name === "Edit") {
+    showToast("Edit mode: Ready.");
+  } else if (name === "File") {
+    showToast("File operations: Ready.");
+  } else {
+    showToast(`Option: ${name}`);
+  }
 }
 
 // ============================================================================
@@ -1578,6 +1592,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Mobile touch support for submenus
+  document.querySelectorAll(".start-menu-item.has-submenu").forEach((item) => {
+    item.addEventListener("click", (e) => {
+      const submenu = item.querySelector(".submenu");
+      if (submenu && window.innerWidth <= 768) {
+        e.stopPropagation();
+        const isShown = submenu.style.display === "flex";
+        document.querySelectorAll(".submenu").forEach((s) => (s.style.display = ""));
+        submenu.style.display = isShown ? "none" : "flex";
+      }
+    });
+  });
+
   document.addEventListener("click", (e) => {
     if (!e.target.closest("#start-menu") && !e.target.closest("#start-button")) {
       closeStartMenu();
@@ -1651,3 +1678,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log("THE LOST PC (Windows 98) initialized successfully! 🚀");
 });
+
